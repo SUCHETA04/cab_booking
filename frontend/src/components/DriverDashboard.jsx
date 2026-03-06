@@ -264,8 +264,8 @@ const DriverDashboard = () => {
                                             </div>
                                             <div className="h-full w-full rounded-xl overflow-hidden border border-gray-200">
                                                 <RideMap
-                                                    pickupLat={22.5839} pickupLng={88.3433}
-                                                    dropoffLat={22.6046} dropoffLng={88.3831}
+                                                    pickupLat={ride.pickupLat || 22.5839} pickupLng={ride.pickupLng || 88.3433}
+                                                    dropoffLat={ride.dropoffLat || 22.6046} dropoffLng={ride.dropoffLng || 88.3831}
                                                     driverLat={ride.status === 'IN_PROGRESS' ? currentLocation.lat : null}
                                                     driverLng={ride.status === 'IN_PROGRESS' ? currentLocation.lng : null}
                                                 />

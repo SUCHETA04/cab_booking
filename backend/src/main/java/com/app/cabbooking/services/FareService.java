@@ -5,14 +5,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class FareService {
     
-    // Base fare: $5.00
-    private static final double BASE_FARE = 5.0;
+    // Base fare: ₹0.00
+    private static final double BASE_FARE = 0.0;
     
-    // Per KM rate: $1.50
-    private static final double PER_KM_RATE = 1.5;
+    // Per KM rate: ₹10.00
+    private static final double PER_KM_RATE = 10.0;
     
-    // Per Minute rate: $0.25 (Assuming average speed of 40km/h for estimate)
-    private static final double PER_MINUTE_RATE = 0.25;
+    // Per Minute rate: ₹0.00
+    private static final double PER_MINUTE_RATE = 0.0;
 
     // Surge multiplier (1.0 for normal, potentially > 1.0 for high demand)
     private static final double SURGE_MULTIPLIER = 1.0;

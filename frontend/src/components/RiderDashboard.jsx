@@ -40,31 +40,49 @@ const RiderDashboard = () => {
         };
     }, [user, rides]);
 
-    const handleRequestRide = (e) => {
+    const geocode = async (address) => {
+        try {
+            const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+            if (response.data && response.data.length > 0) {
+                return {
+                    lat: parseFloat(response.data[0].lat),
+                    lng: parseFloat(response.data[0].lon)
+                };
+            }
+        } catch (error) {
+            console.error("Geocoding failed", error);
+        }
+        return null; // Fallback
+    };
+
+    const handleRequestRide = async (e) => {
         e.preventDefault();
         setMessage('');
 
-        // In a real app with Google Maps, we would get proper Lat/Lng coordinates here.
-        // For now, we will use dummy coordinates.
+        // Attempt real geocoding, fallback to dummy coordinates if failed
+        const pickupCoords = await geocode(pickup) || { lat: 22.5839, lng: 88.3433 };
+        const dropoffCoords = await geocode(dropoff) || { lat: 22.6046, lng: 88.3831 };
+
         const ridePayload = {
             pickupLocation: pickup,
             dropoffLocation: dropoff,
-            pickupLat: 22.5839, // Howrah Station
-            pickupLng: 88.3433,
-            dropoffLat: 22.6046, // Kolkata Station
-            dropoffLng: 88.3831
+            pickupLat: pickupCoords.lat,
+            pickupLng: pickupCoords.lng,
+            dropoffLat: dropoffCoords.lat,
+            dropoffLng: dropoffCoords.lng
         };
 
-        axios.post('http://localhost:8080/api/rides/request', ridePayload, {
-            headers: { Authorization: `Bearer ${user.accessToken}` }
-        }).then(response => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/rides/request', ridePayload, {
+                headers: { Authorization: `Bearer ${user.accessToken}` }
+            });
             setMessage(`Ride requested successfully! Estimated Fare: ₹${response.data.fare}`);
             setRides([...rides, response.data]);
             setPickup('');
             setDropoff('');
-        }).catch(error => {
+        } catch (error) {
             setMessage("Error requesting ride.");
-        });
+        }
     };
 
     if (!user || !user.roles.includes("ROLE_RIDER")) {
@@ -162,12 +180,22 @@ const RiderDashboard = () => {
                             Live Tracking
                         </div>
                         <div className="h-full w-full rounded-2xl overflow-hidden shadow-inner">
-                            <RideMap
-                                pickupLat={22.5839} pickupLng={88.3433}
-                                dropoffLat={22.6046} dropoffLng={88.3831}
-                                driverLat={driverLocation?.lat}
-                                driverLng={driverLocation?.lng}
-                            />
+                            {(() => {
+                                const activeRide = rides.find(r => r.status === 'ACCEPTED' || r.status === 'IN_PROGRESS') || rides[rides.length - 1]; // active or most recent ride
+                                const mapPickupLat = activeRide ? activeRide.pickupLat : 22.5839;
+                                const mapPickupLng = activeRide ? activeRide.pickupLng : 88.3433;
+                                const mapDropoffLat = activeRide ? activeRide.dropoffLat : 22.6046;
+                                const mapDropoffLng = activeRide ? activeRide.dropoffLng : 88.3831;
+
+                                return (
+                                    <RideMap
+                                        pickupLat={mapPickupLat} pickupLng={mapPickupLng}
+                                        dropoffLat={mapDropoffLat} dropoffLng={mapDropoffLng}
+                                        driverLat={driverLocation?.lat}
+                                        driverLng={driverLocation?.lng}
+                                    />
+                                );
+                            })()}
                         </div>
                     </div>
                 </div>
