@@ -40,6 +40,7 @@ public class Ride {
   private LocalDateTime endTime;
 
   private Boolean isPaid = false;
+  private Boolean isPaymentFailed = false;
 
   public Ride() {
   }
@@ -56,6 +57,7 @@ public class Ride {
     this.status = ERideStatus.PENDING;
     this.requestedAt = LocalDateTime.now();
     this.isPaid = false;
+    this.isPaymentFailed = false;
   }
 
   public Long getId() {
@@ -176,5 +178,13 @@ public class Ride {
 
   public void setIsPaid(Boolean isPaid) {
     this.isPaid = isPaid;
+  }
+
+  public Boolean getIsPaymentFailed() {
+    return this.isPaymentFailed;
+  }
+
+  public void setIsPaymentFailed(Boolean isPaymentFailed) {
+    this.isPaymentFailed = isPaymentFailed;
   }
 }

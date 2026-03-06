@@ -74,7 +74,18 @@ public class PaymentController {
   public ResponseEntity<?> confirmPayment(@PathVariable Long rideId) {
     Ride ride = rideRepository.findById(rideId).orElseThrow(() -> new RuntimeException("Ride not found"));
     ride.setIsPaid(true);
+    // If it succeeds, ensure failed is false
+    ride.setIsPaymentFailed(false);
     rideRepository.save(ride);
     return ResponseEntity.ok(new MessageResponse("Payment confirmed successfully"));
+  }
+
+  @PostMapping("/fail/{rideId}")
+  @PreAuthorize("hasRole('RIDER')")
+  public ResponseEntity<?> failPayment(@PathVariable Long rideId) {
+    Ride ride = rideRepository.findById(rideId).orElseThrow(() -> new RuntimeException("Ride not found"));
+    ride.setIsPaymentFailed(true);
+    rideRepository.save(ride);
+    return ResponseEntity.ok(new MessageResponse("Payment marked as failed"));
   }
 }

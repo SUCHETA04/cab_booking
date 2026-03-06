@@ -22,7 +22,13 @@ const CheckoutForm = ({ clientSecret, fare, rideId }) => {
 
     useEffect(() => {
         if (timeLeft <= 0) {
-            setIsExpired(true);
+            if (!isExpired) {
+                setIsExpired(true);
+                const user = AuthService.getCurrentUser();
+                axios.post(`http://localhost:8080/api/payment/fail/${rideId}`, {}, {
+                    headers: { Authorization: `Bearer ${user.accessToken}` }
+                }).catch(e => console.log(e));
+            }
             return;
         }
 
@@ -56,6 +62,10 @@ const CheckoutForm = ({ clientSecret, fare, rideId }) => {
 
             if (error) {
                 setMessage(error.message);
+                const user = AuthService.getCurrentUser();
+                await axios.post(`http://localhost:8080/api/payment/fail/${rideId}`, {}, {
+                    headers: { Authorization: `Bearer ${user.accessToken}` }
+                }).catch(e => console.log(e));
             } else {
                 setMessage("Payment successful!");
                 const user = AuthService.getCurrentUser();

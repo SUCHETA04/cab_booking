@@ -201,6 +201,28 @@ const DriverDashboard = () => {
                                                 <span className="text-sm font-medium text-gray-600">Total Fare</span>
                                                 <span className="text-xl font-extrabold text-gray-900">₹{ride.fare}</span>
                                             </div>
+
+                                            {ride.status === 'COMPLETED' && (
+                                                <div className="bg-gray-50 rounded-xl p-4 flex justify-between items-center mb-4 mt-[-1rem]">
+                                                    <span className="text-sm font-medium text-gray-600">Payment Status</span>
+                                                    {ride.isPaid ? (
+                                                        <span className="inline-flex items-center text-green-700 bg-green-100 px-3 py-1 rounded-lg font-bold border border-green-200 text-sm">
+                                                            <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                                                            Paid
+                                                        </span>
+                                                    ) : ride.isPaymentFailed ? (
+                                                        <span className="inline-flex items-center text-red-700 bg-red-100 px-3 py-1 rounded-lg font-bold border border-red-200 text-sm">
+                                                            <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
+                                                            Failed
+                                                        </span>
+                                                    ) : (
+                                                        <span className="inline-flex items-center text-yellow-700 bg-yellow-100 px-3 py-1 rounded-lg font-bold border border-yellow-200 text-sm">
+                                                            <svg className="w-4 h-4 mr-1.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                                            Pending
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div className="flex flex-col space-y-2 mt-auto">
