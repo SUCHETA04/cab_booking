@@ -35,77 +35,121 @@ const Register = () => {
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
-            <div className="w-full max-w-md bg-white rounded-lg shadow-md p-8">
-                <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
-                <form onSubmit={handleRegister}>
+        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 py-12">
+            {/* Background design elements */}
+            <div className="fixed top-0 left-0 w-full h-full overflow-hidden z-0 pointing-events-none opacity-20 hidden md:block">
+                <div className="absolute top-[10%] left-[10%] w-[30%] h-[30%] rounded-full bg-indigo-500 blur-[120px]"></div>
+                <div className="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] rounded-full bg-blue-500 blur-[120px]"></div>
+            </div>
+
+            <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-10 z-10 mx-4">
+                <div className="text-center mb-8">
+                    <h2 className="text-3xl font-extrabold text-white tracking-tight">Create an Account</h2>
+                    <p className="text-blue-200 text-sm mt-2">Join us and start moving smarter</p>
+                </div>
+
+                <form onSubmit={handleRegister} className="space-y-5">
                     {!successful && (
-                        <div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                                <input
-                                    type="text"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    required
-                                />
+                        <>
+                            <div>
+                                <label className="block text-blue-100 text-sm font-semibold mb-2 ml-1">Username</label>
+                                <div className="relative">
+                                    <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-blue-300">
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-blue-300/50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white/10 transition-all duration-300"
+                                        placeholder="Choose a username"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        required
+                                    />
+                                </div>
                             </div>
 
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                                <input
-                                    type="email"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                />
+                            <div>
+                                <label className="block text-blue-100 text-sm font-semibold mb-2 ml-1">Email</label>
+                                <div className="relative">
+                                    <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-blue-300">
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                                    </span>
+                                    <input
+                                        type="email"
+                                        className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-blue-300/50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white/10 transition-all duration-300"
+                                        placeholder="Enter your email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                    />
+                                </div>
                             </div>
 
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Role</label>
-                                <select
-                                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value={role}
-                                    onChange={(e) => setRole(e.target.value)}
+                            <div className="grid grid-cols-2 gap-4 pt-1">
+                                <label
+                                    className={`relative flex flex-col items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all duration-300 ${role === 'rider' ? 'border-blue-400 bg-blue-500/20 text-white' : 'border-white/10 bg-white/5 text-blue-200 hover:bg-white/10'}`}
                                 >
-                                    <option value="rider">Rider</option>
-                                    <option value="driver">Driver</option>
-                                </select>
+                                    <input type="radio" name="role" value="rider" className="hidden" onChange={(e) => setRole(e.target.value)} checked={role === 'rider'} />
+                                    <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                    <span className="font-bold">Rider</span>
+                                </label>
+
+                                <label
+                                    className={`relative flex flex-col items-center justify-center p-4 cursor-pointer rounded-2xl border-2 transition-all duration-300 ${role === 'driver' ? 'border-indigo-400 bg-indigo-500/20 text-white' : 'border-white/10 bg-white/5 text-blue-200 hover:bg-white/10'}`}
+                                >
+                                    <input type="radio" name="role" value="driver" className="hidden" onChange={(e) => setRole(e.target.value)} checked={role === 'driver'} />
+                                    <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>
+                                    <span className="font-bold">Driver</span>
+                                </label>
                             </div>
 
-                            <div className="mb-6">
-                                <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                                <input
-                                    type="password"
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
+                            <div>
+                                <label className="block text-blue-100 text-sm font-semibold mb-2 ml-1">Password</label>
+                                <div className="relative">
+                                    <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-blue-300">
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                                    </span>
+                                    <input
+                                        type="password"
+                                        className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-blue-300/50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white/10 transition-all duration-300"
+                                        placeholder="Create a strong password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
                             </div>
 
-                            <div className="flex items-center justify-between">
+                            <div className="pt-4">
                                 <button
-                                    className="bg-green-500 hover:bg-green-700 w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    className="w-full bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-500 hover:to-emerald-700 text-white font-bold py-3.5 px-4 rounded-2xl shadow-lg shadow-emerald-500/25 transform transition duration-300 active:scale-95 text-lg"
                                     type="submit"
                                 >
                                     Sign Up
                                 </button>
                             </div>
-                        </div>
+                        </>
                     )}
 
                     {message && (
-                        <div className={`mt-4 p-3 rounded text-center ${successful ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`} role="alert">
+                        <div className={`mt-4 p-4 rounded-2xl border flex items-start text-sm font-medium backdrop-blur-sm shadow-sm
+                            ${successful
+                                ? 'bg-green-500/20 border-green-500/50 text-green-100'
+                                : 'bg-red-500/20 border-red-500/50 text-red-100'}`} role="alert"
+                        >
+                            <svg className={`w-5 h-5 mr-3 flex-shrink-0 ${successful ? 'text-green-300' : 'text-red-300'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                {successful
+                                    ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                }
+                            </svg>
                             {message}
                         </div>
                     )}
 
-                    <div className="mt-4 text-center">
+                    <div className="mt-6 text-center text-sm font-medium text-blue-200">
                         <span>Already have an account? </span>
-                        <Link to="/login" className="text-blue-500 hover:text-blue-800">Login</Link>
+                        <Link to="/login" className="text-white hover:text-blue-300 underline decoration-blue-400 decoration-2 underline-offset-4 transition-colors">Sign in</Link>
                     </div>
                 </form>
             </div>
