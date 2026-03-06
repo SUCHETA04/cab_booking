@@ -27,9 +27,19 @@ public class DriverController {
 
   @GetMapping("/available-rides")
   @PreAuthorize("hasRole('DRIVER')")
-  public ResponseEntity<?> getAvailableRides() {
-    // Return rides that are still pending
-    return ResponseEntity.ok(rideRepository.findByStatus(ERideStatus.PENDING));
+  public ResponseEntity<?> getAvailableRides(Authentication authentication) {
+    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    User driver = userRepository.findById(userDetails.getId()).orElseThrow();
+
+    String vehicleType = driver.getVehicleType();
+    
+    // If the driver doesn't have a vehicle type set, they shouldn't see any rides securely.
+    if (vehicleType == null || vehicleType.trim().isEmpty()) {
+       return ResponseEntity.ok(java.util.Collections.emptyList());
+    }
+
+    // Return only PENDING rides that match the driver's registered vehicle type
+    return ResponseEntity.ok(rideRepository.findByStatusAndRideType(ERideStatus.PENDING, vehicleType));
   }
 
   @PutMapping("/rides/{id}/accept")
