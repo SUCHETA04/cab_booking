@@ -16,7 +16,28 @@ const CheckoutForm = ({ clientSecret, fare, rideId }) => {
     const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('card'); // 'card' or 'upi'
+    const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
+    const [isExpired, setIsExpired] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (timeLeft <= 0) {
+            setIsExpired(true);
+            return;
+        }
+
+        const timerId = setInterval(() => {
+            setTimeLeft((prev) => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(timerId);
+    }, [timeLeft]);
+
+    const formatTime = (seconds) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+    };
 
     const handleCardSubmit = async (e) => {
         e.preventDefault();
@@ -72,8 +93,29 @@ const CheckoutForm = ({ clientSecret, fare, rideId }) => {
     };
 
     return (
-        <div className="bg-white p-6 justify-center max-w-md mx-auto rounded shadow-md mt-10">
-            <h2 className="text-2xl font-bold mb-4 text-center">Complete Payment</h2>
+        <div className="bg-white p-6 justify-center max-w-md mx-auto rounded shadow-md mt-10 relative">
+            {isExpired && (
+                <div className="absolute inset-0 bg-white/90 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded">
+                    <div className="text-red-600 mb-2">
+                        <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Payment Expired</h2>
+                    <p className="text-gray-600 text-center mb-6 px-4">The 5-minute window to complete this payment has closed.</p>
+                    <button
+                        onClick={() => navigate('/rider')}
+                        className="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-6 rounded-lg transition duration-200"
+                    >
+                        Return to Dashboard
+                    </button>
+                </div>
+            )}
+
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold">Complete Payment</h2>
+                <div className={`font-mono text-lg font-bold px-3 py-1 rounded-lg ${timeLeft < 60 ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-blue-50 text-blue-700'}`}>
+                    {formatTime(timeLeft)}
+                </div>
+            </div>
 
             <div className="mb-6 flex justify-center space-x-4 border-b pb-4">
                 <button
@@ -162,7 +204,7 @@ const Checkout = () => {
         <div className="min-h-screen bg-gray-100 flex justify-center items-start pt-20">
             {clientSecret ? (
                 <Elements options={options} stripe={stripePromise}>
-                    <CheckoutForm clientSecret={clientSecret} fare={fare} />
+                    <CheckoutForm clientSecret={clientSecret} fare={fare} rideId={rideId} />
                 </Elements>
             ) : (
                 <div className="text-xl">Loading payment gateway...</div>
