@@ -15,26 +15,27 @@ import com.app.cabbooking.models.Ride;
 import com.app.cabbooking.payload.request.PaymentRequestPayload;
 import com.app.cabbooking.payload.response.MessageResponse;
 import com.app.cabbooking.repository.RideRepository;
-import com.stripe.Stripe;
-import com.stripe.model.PaymentIntent;
-import com.stripe.param.PaymentIntentCreateParams;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import org.json.JSONObject;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
 
-  @Value("${stripe.api.key}")
-  private String stripeApiKey;
+  @Value("${razorpay.api.key}")
+  private String razorpayKey;
+
+  @Value("${razorpay.api.secret}")
+  private String razorpaySecret;
 
   @Autowired
   RideRepository rideRepository;
 
-  @PostMapping("/create-intent")
+  @PostMapping("/create-order")
   @PreAuthorize("hasRole('RIDER')")
-  public ResponseEntity<?> createPaymentIntent(@Valid @RequestBody PaymentRequestPayload payload) {
-    Stripe.apiKey = stripeApiKey;
-
+  public ResponseEntity<?> createOrder(@Valid @RequestBody PaymentRequestPayload payload) {
     Ride ride = rideRepository.findById(payload.getRideId()).orElseThrow();
 
     if (ride.getFare() == null || ride.getFare() <= 0) {
@@ -42,30 +43,24 @@ public class PaymentController {
     }
 
     try {
-      // Stripe requires amount in cents
-      long amountInCents = (long) (ride.getFare() * 100);
+      RazorpayClient client = new RazorpayClient(razorpayKey, razorpaySecret);
 
-      PaymentIntentCreateParams params =
-          PaymentIntentCreateParams.builder()
-              .setAmount(amountInCents)
-              .setCurrency("inr")
-              .setAutomaticPaymentMethods(
-                  PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
-                      .setEnabled(true)
-                      .build()
-              )
-              .putMetadata("ride_id", ride.getId().toString())
-              .build();
+      long amountInPaise = (long) (ride.getFare() * 100);
 
-      PaymentIntent intent = PaymentIntent.create(params);
+      JSONObject orderRequest = new JSONObject();
+      orderRequest.put("amount", amountInPaise);
+      orderRequest.put("currency", "INR");
+      orderRequest.put("receipt", ride.getId().toString());
+
+      Order order = client.orders.create(orderRequest);
 
       Map<String, String> responseData = new HashMap<>();
-      responseData.put("clientSecret", intent.getClientSecret());
+      responseData.put("orderId", order.get("id"));
 
       return ResponseEntity.ok(responseData);
       
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Stripe error: " + e.getMessage()));
+      return ResponseEntity.badRequest().body(new MessageResponse("Razorpay error: " + e.getMessage()));
     }
   }
 
