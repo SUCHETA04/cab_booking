@@ -91,6 +91,17 @@ public class AuthController {
                signUpRequest.getEmail(),
                encoder.encode(signUpRequest.getPassword()));
 
+    // Set Driver Details if present
+    if (signUpRequest.getDrivingLicenseNumber() != null) {
+      user.setDrivingLicenseNumber(signUpRequest.getDrivingLicenseNumber());
+    }
+    if (signUpRequest.getVehicleNumber() != null) {
+      user.setVehicleNumber(signUpRequest.getVehicleNumber());
+    }
+    if (signUpRequest.getVehicleType() != null) {
+      user.setVehicleType(signUpRequest.getVehicleType());
+    }
+
     Set<String> strRoles = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();
 

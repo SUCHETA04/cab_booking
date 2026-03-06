@@ -32,6 +32,10 @@ public class User {
   @Size(max = 120)
   private String password;
 
+  private String drivingLicenseNumber;
+  private String vehicleNumber;
+  private String vehicleType;
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "user_roles",
              joinColumns = @JoinColumn(name = "user_id"),
@@ -85,5 +89,29 @@ public class User {
 
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
+  }
+
+  public String getDrivingLicenseNumber() {
+    return drivingLicenseNumber;
+  }
+
+  public void setDrivingLicenseNumber(String drivingLicenseNumber) {
+    this.drivingLicenseNumber = drivingLicenseNumber;
+  }
+
+  public String getVehicleNumber() {
+    return vehicleNumber;
+  }
+
+  public void setVehicleNumber(String vehicleNumber) {
+    this.vehicleNumber = vehicleNumber;
+  }
+
+  public String getVehicleType() {
+    return vehicleType;
+  }
+
+  public void setVehicleType(String vehicleType) {
+    this.vehicleType = vehicleType;
   }
 }

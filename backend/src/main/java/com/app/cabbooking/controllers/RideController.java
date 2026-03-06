@@ -53,7 +53,7 @@ public class RideController {
     // Estimate speed as 40 km/h for the duration (in mins) -> distance / 40 * 60 = distance * 1.5
     double durationMins = distance * 1.5; 
     
-    double estimatedFare = fareService.calculateFare(distance, durationMins);
+    double estimatedFare = fareService.calculateFare(distance, durationMins, payload.getRideType());
 
     Ride ride = new Ride(
         rider,
@@ -63,7 +63,8 @@ public class RideController {
         payload.getPickupLng(),
         payload.getDropoffLat(),
         payload.getDropoffLng(),
-        estimatedFare
+        estimatedFare,
+        payload.getRideType()
     );
 
     rideRepository.save(ride);

@@ -24,6 +24,8 @@ public class Ride {
   
   private String dropoffLocation;
 
+  private String rideType;
+
   private Double pickupLat;
   private Double pickupLng;
 
@@ -45,7 +47,7 @@ public class Ride {
   public Ride() {
   }
 
-  public Ride(User rider, String pickupLocation, String dropoffLocation, Double pickupLat, Double pickupLng, Double dropoffLat, Double dropoffLng, Double fare) {
+  public Ride(User rider, String pickupLocation, String dropoffLocation, Double pickupLat, Double pickupLng, Double dropoffLat, Double dropoffLng, Double fare, String rideType) {
     this.rider = rider;
     this.pickupLocation = pickupLocation;
     this.dropoffLocation = dropoffLocation;
@@ -54,6 +56,7 @@ public class Ride {
     this.dropoffLat = dropoffLat;
     this.dropoffLng = dropoffLng;
     this.fare = fare;
+    this.rideType = rideType;
     this.status = ERideStatus.PENDING;
     this.requestedAt = LocalDateTime.now();
     this.isPaid = false;
@@ -98,6 +101,14 @@ public class Ride {
 
   public void setDropoffLocation(String dropoffLocation) {
     this.dropoffLocation = dropoffLocation;
+  }
+
+  public String getRideType() {
+    return rideType;
+  }
+
+  public void setRideType(String rideType) {
+    this.rideType = rideType;
   }
 
   public Double getPickupLat() {

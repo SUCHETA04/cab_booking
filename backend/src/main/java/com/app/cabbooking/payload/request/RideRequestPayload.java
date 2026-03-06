@@ -11,6 +11,9 @@ public class RideRequestPayload {
   @NotBlank
   private String dropoffLocation;
 
+  @NotBlank
+  private String rideType;
+
   @NotNull
   private Double pickupLat;
 
@@ -37,6 +40,14 @@ public class RideRequestPayload {
 
   public void setDropoffLocation(String dropoffLocation) {
     this.dropoffLocation = dropoffLocation;
+  }
+
+  public String getRideType() {
+    return rideType;
+  }
+
+  public void setRideType(String rideType) {
+    this.rideType = rideType;
   }
 
   public Double getPickupLat() {

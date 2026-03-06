@@ -8,6 +8,7 @@ import RideMap from './RideMap';
 const RiderDashboard = () => {
     const [pickup, setPickup] = useState('');
     const [dropoff, setDropoff] = useState('');
+    const [rideType, setRideType] = useState('CAR');
     const [rides, setRides] = useState([]);
     const [message, setMessage] = useState('');
 
@@ -69,7 +70,8 @@ const RiderDashboard = () => {
             pickupLat: pickupCoords.lat,
             pickupLng: pickupCoords.lng,
             dropoffLat: dropoffCoords.lat,
-            dropoffLng: dropoffCoords.lng
+            dropoffLng: dropoffCoords.lng,
+            rideType: rideType
         };
 
         try {
@@ -157,6 +159,36 @@ const RiderDashboard = () => {
                                 </div>
                             </div>
 
+                            <div className="relative pb-2">
+                                <label className="text-sm font-semibold text-gray-600 mb-2 block">Available Vehicles</label>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <div
+                                        onClick={() => setRideType('BIKE')}
+                                        className={`cursor-pointer rounded-2xl border-2 p-3 flex flex-col items-center justify-center transition-all ${rideType === 'BIKE' ? 'border-blue-500 bg-blue-50 scale-105 shadow-md' : 'border-gray-100 bg-gray-50 hover:bg-gray-100 opacity-70 hover:opacity-100'}`}
+                                    >
+                                        <span className="text-3xl mb-1">🏍️</span>
+                                        <span className="text-xs font-extrabold text-gray-800">Bike</span>
+                                        <span className="text-[10px] font-medium text-gray-500">₹10/km</span>
+                                    </div>
+                                    <div
+                                        onClick={() => setRideType('AUTO')}
+                                        className={`cursor-pointer rounded-2xl border-2 p-3 flex flex-col items-center justify-center transition-all ${rideType === 'AUTO' ? 'border-blue-500 bg-blue-50 scale-105 shadow-md' : 'border-gray-100 bg-gray-50 hover:bg-gray-100 opacity-70 hover:opacity-100'}`}
+                                    >
+                                        <span className="text-3xl mb-1">🛺</span>
+                                        <span className="text-xs font-extrabold text-gray-800">Auto</span>
+                                        <span className="text-[10px] font-medium text-gray-500">₹25/km</span>
+                                    </div>
+                                    <div
+                                        onClick={() => setRideType('CAR')}
+                                        className={`cursor-pointer rounded-2xl border-2 p-3 flex flex-col items-center justify-center transition-all ${rideType === 'CAR' ? 'border-blue-500 bg-blue-50 scale-105 shadow-md' : 'border-gray-100 bg-gray-50 hover:bg-gray-100 opacity-70 hover:opacity-100'}`}
+                                    >
+                                        <span className="text-3xl mb-1">🚕</span>
+                                        <span className="text-xs font-extrabold text-gray-800">Car</span>
+                                        <span className="text-[10px] font-medium text-gray-500">₹50/km</span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <button
                                 type="submit"
                                 className="w-full bg-blue-600 text-white font-bold text-lg py-3.5 rounded-2xl hover:bg-blue-700 shadow-[0_8px_30px_rgb(0,0,0,0.12)] shadow-blue-500/30 transform transition duration-300 hover:scale-[1.02] active:scale-[0.98]"
@@ -230,14 +262,21 @@ const RiderDashboard = () => {
                                             <tr key={ride.id} className="hover:bg-blue-50/30 transition duration-150">
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center">
-                                                        <div className="flex flex-col items-center mr-3">
+                                                        <div className="flex flex-col items-center mr-3 mt-1.5">
                                                             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                                            <div className="w-0.5 h-3 bg-gray-200 my-1"></div>
+                                                            <div className="w-0.5 h-3 bg-gray-200 my-1 flex-grow"></div>
                                                             <div className="w-2 h-2 border-2 border-gray-400 bg-white rounded-none"></div>
                                                         </div>
                                                         <div>
-                                                            <p className="text-sm font-semibold text-gray-800">{ride.pickupLocation}</p>
-                                                            <p className="text-sm text-gray-500 mt-1">{ride.dropoffLocation}</p>
+                                                            <div className="flex items-center space-x-2">
+                                                                <p className="text-sm font-semibold text-gray-800">{ride.pickupLocation}</p>
+                                                                {ride.rideType && (
+                                                                    <span className="px-1.5 py-0.5 bg-gray-100 border border-gray-200 text-gray-600 rounded text-[10px] font-black uppercase tracking-wider">
+                                                                        {ride.rideType}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <p className="text-xs text-gray-500 mt-1">{ride.dropoffLocation}</p>
                                                         </div>
                                                     </div>
                                                 </td>

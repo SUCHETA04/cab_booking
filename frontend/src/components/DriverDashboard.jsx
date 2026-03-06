@@ -139,7 +139,14 @@ const DriverDashboard = () => {
                                                             <div className="w-3 h-3 border-2 border-red-500 bg-white rounded-full"></div>
                                                         </div>
                                                         <div>
-                                                            <p className="text-sm font-bold text-gray-900 line-clamp-1">{ride.pickupLocation}</p>
+                                                            <div className="flex items-center space-x-2">
+                                                                <p className="text-sm font-bold text-gray-900 line-clamp-1">{ride.pickupLocation}</p>
+                                                                {ride.rideType && (
+                                                                    <span className="px-1.5 py-0.5 bg-purple-100 border border-purple-200 text-purple-700 rounded text-[10px] font-black uppercase tracking-wider">
+                                                                        {ride.rideType}
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                             <p className="text-sm text-gray-500 mt-1 line-clamp-1">{ride.dropoffLocation}</p>
                                                         </div>
                                                     </div>
@@ -203,7 +210,14 @@ const DriverDashboard = () => {
                                                     </div>
                                                     <div className="space-y-4">
                                                         <div>
-                                                            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Pickup</p>
+                                                            <div className="flex items-center space-x-2 mb-0.5">
+                                                                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Pickup</p>
+                                                                {ride.rideType && (
+                                                                    <span className="px-1.5 py-0.5 bg-gray-100 border border-gray-200 text-gray-600 rounded text-[10px] font-black uppercase tracking-wider">
+                                                                        {ride.rideType}
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                             <p className="text-sm font-bold text-gray-900 leading-snug">{ride.pickupLocation}</p>
                                                         </div>
                                                         <div>

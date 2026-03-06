@@ -8,9 +8,6 @@ public class FareService {
     // Base fare: ₹0.00
     private static final double BASE_FARE = 0.0;
     
-    // Per KM rate: ₹10.00
-    private static final double PER_KM_RATE = 10.0;
-    
     // Per Minute rate: ₹0.00
     private static final double PER_MINUTE_RATE = 0.0;
 
@@ -21,10 +18,23 @@ public class FareService {
      * Calculates the estimated fare based on distance and duration.
      * @param distanceInKm Distance in kilometers.
      * @param durationInMins Duration in minutes.
+     * @param rideType The vehicle type: Bike, Auto, Car.
      * @return Estimated fare.
      */
-    public double calculateFare(double distanceInKm, double durationInMins) {
-        double distanceFare = distanceInKm * PER_KM_RATE;
+    public double calculateFare(double distanceInKm, double durationInMins, String rideType) {
+        double perKmRate = 50.0; // Default to CAR
+        if (rideType != null) {
+            String type = rideType.toUpperCase();
+            if (type.equals("BIKE")) {
+                perKmRate = 10.0;
+            } else if (type.equals("AUTO")) {
+                perKmRate = 25.0;
+            } else if (type.equals("CAR")) {
+                perKmRate = 50.0;
+            }
+        }
+
+        double distanceFare = distanceInKm * perKmRate;
         double timeFare = durationInMins * PER_MINUTE_RATE;
         
         double totalFare = BASE_FARE + distanceFare + timeFare;

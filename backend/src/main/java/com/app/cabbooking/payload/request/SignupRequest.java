@@ -20,6 +20,10 @@ public class SignupRequest {
   @Size(min = 6, max = 40)
   private String password;
 
+  private String drivingLicenseNumber;
+  private String vehicleNumber;
+  private String vehicleType;
+
   public String getUsername() {
     return username;
   }
@@ -50,5 +54,29 @@ public class SignupRequest {
 
   public void setRole(Set<String> role) {
     this.role = role;
+  }
+
+  public String getDrivingLicenseNumber() {
+    return drivingLicenseNumber;
+  }
+
+  public void setDrivingLicenseNumber(String drivingLicenseNumber) {
+    this.drivingLicenseNumber = drivingLicenseNumber;
+  }
+
+  public String getVehicleNumber() {
+    return vehicleNumber;
+  }
+
+  public void setVehicleNumber(String vehicleNumber) {
+    this.vehicleNumber = vehicleNumber;
+  }
+
+  public String getVehicleType() {
+    return vehicleType;
+  }
+
+  public void setVehicleType(String vehicleType) {
+    this.vehicleType = vehicleType;
   }
 }

@@ -7,6 +7,9 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('rider');
+    const [drivingLicenseNumber, setDrivingLicenseNumber] = useState('');
+    const [vehicleNumber, setVehicleNumber] = useState('');
+    const [vehicleType, setVehicleType] = useState('CAR');
     const [successful, setSuccessful] = useState(false);
     const [message, setMessage] = useState('');
 
@@ -15,7 +18,15 @@ const Register = () => {
         setMessage('');
         setSuccessful(false);
 
-        AuthService.register(username, email, password, role).then(
+        AuthService.register(
+            username,
+            email,
+            password,
+            role,
+            role === 'driver' ? drivingLicenseNumber : null,
+            role === 'driver' ? vehicleNumber : null,
+            role === 'driver' ? vehicleType : null
+        ).then(
             (response) => {
                 setMessage(response.data.message);
                 setSuccessful(true);
@@ -102,6 +113,60 @@ const Register = () => {
                                     <span className="font-bold">Driver</span>
                                 </label>
                             </div>
+
+                            {role === 'driver' && (
+                                <div className="space-y-4 p-4 mt-2 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl animate-fade-in">
+                                    <h3 className="text-white font-bold text-sm mb-2">Driver Details</h3>
+                                    <div>
+                                        <label className="block text-indigo-200 text-xs font-semibold mb-1 ml-1">Driving License Number</label>
+                                        <input
+                                            type="text"
+                                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:bg-white/10 transition-all duration-300"
+                                            placeholder="e.g. DL-123456789"
+                                            value={drivingLicenseNumber}
+                                            onChange={(e) => setDrivingLicenseNumber(e.target.value)}
+                                            required={role === 'driver'}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-indigo-200 text-xs font-semibold mb-1 ml-1">Vehicle License Plate</label>
+                                        <input
+                                            type="text"
+                                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-indigo-300/50 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:bg-white/10 transition-all duration-300"
+                                            placeholder="e.g. MH 01 AB 1234"
+                                            value={vehicleNumber}
+                                            onChange={(e) => setVehicleNumber(e.target.value)}
+                                            required={role === 'driver'}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-indigo-200 text-xs font-semibold mb-2 ml-1">Vehicle Type</label>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            <div
+                                                onClick={() => setVehicleType('BIKE')}
+                                                className={`cursor-pointer rounded-xl border-2 p-2 flex flex-col items-center justify-center transition-all ${vehicleType === 'BIKE' ? 'border-indigo-400 bg-indigo-500/30' : 'border-white/10 bg-white/5 opacity-50 hover:opacity-100'}`}
+                                            >
+                                                <span className="text-xl mb-1">🏍️</span>
+                                                <span className="text-[10px] font-bold text-white uppercase">Bike</span>
+                                            </div>
+                                            <div
+                                                onClick={() => setVehicleType('AUTO')}
+                                                className={`cursor-pointer rounded-xl border-2 p-2 flex flex-col items-center justify-center transition-all ${vehicleType === 'AUTO' ? 'border-indigo-400 bg-indigo-500/30' : 'border-white/10 bg-white/5 opacity-50 hover:opacity-100'}`}
+                                            >
+                                                <span className="text-xl mb-1">🛺</span>
+                                                <span className="text-[10px] font-bold text-white uppercase">Auto</span>
+                                            </div>
+                                            <div
+                                                onClick={() => setVehicleType('CAR')}
+                                                className={`cursor-pointer rounded-xl border-2 p-2 flex flex-col items-center justify-center transition-all ${vehicleType === 'CAR' ? 'border-indigo-400 bg-indigo-500/30' : 'border-white/10 bg-white/5 opacity-50 hover:opacity-100'}`}
+                                            >
+                                                <span className="text-xl mb-1">🚕</span>
+                                                <span className="text-[10px] font-bold text-white uppercase">Car</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             <div>
                                 <label className="block text-blue-100 text-sm font-semibold mb-2 ml-1">Password</label>
