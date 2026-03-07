@@ -11,6 +11,7 @@ const RiderDashboard = () => {
     const [rideType, setRideType] = useState('CAR');
     const [rides, setRides] = useState([]);
     const [message, setMessage] = useState('');
+    const [gettingLocation, setGettingLocation] = useState(false);
 
     // Add missing tracking state
     const [driverLocation, setDriverLocation] = useState(null);
@@ -54,6 +55,32 @@ const RiderDashboard = () => {
             console.error("Geocoding failed", error);
         }
         return null; // Fallback
+    };
+
+    const handleUseCurrentLocation = () => {
+        if (!navigator.geolocation) {
+            alert("Geolocation is not supported by your browser.");
+            return;
+        }
+        setGettingLocation(true);
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+            try {
+                const res = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                if (res.data && res.data.display_name) {
+                    const shortName = res.data.display_name.split(',').slice(0, 3).join(',').trim();
+                    setPickup(shortName);
+                } else {
+                    setPickup(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+                }
+            } catch (e) {
+                setPickup(`${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+            }
+            setGettingLocation(false);
+        }, () => {
+            alert("Unable to retrieve your location. Please check browser permissions.");
+            setGettingLocation(false);
+        });
     };
 
     const handleRequestRide = async (e) => {
@@ -126,10 +153,21 @@ const RiderDashboard = () => {
 
                         <form onSubmit={handleRequestRide} className="space-y-5">
                             <div className="relative">
-                                <label className="text-sm font-semibold text-gray-600 mb-1 block">Pickup Location</label>
+                                <label className="text-sm font-semibold text-gray-600 mb-1 flex justify-between items-center w-full">
+                                    <span>Pickup Location</span>
+                                    <button
+                                        type="button"
+                                        onClick={handleUseCurrentLocation}
+                                        disabled={gettingLocation}
+                                        className="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center transition disabled:opacity-50"
+                                    >
+                                        <svg className={`w-3.5 h-3.5 mr-1 ${gettingLocation ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                        {gettingLocation ? 'Locating...' : 'Use Current Location'}
+                                    </button>
+                                </label>
                                 <div className="relative">
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                                     </span>
                                     <input
                                         type="text"
@@ -146,7 +184,7 @@ const RiderDashboard = () => {
                                 <label className="text-sm font-semibold text-gray-600 mb-1 block">Dropoff Location</label>
                                 <div className="relative">
                                     <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                                        <div className="w-2 h-2 border-2 border-gray-400 bg-white rounded-none"></div>
+                                        <div className="w-2 h-2 bg-red-500 rounded-none"></div>
                                     </span>
                                     <input
                                         type="text"

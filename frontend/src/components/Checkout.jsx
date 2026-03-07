@@ -81,7 +81,7 @@ const Checkout = () => {
             key: "rzp_test_SO4YpaYNVDXVK7",
             amount: fare * 100,
             currency: "INR",
-            name: "Aura Premium Rides",
+            name: "AURAA Premium Rides",
             description: "Ride Fare Payment",
             order_id: orderId,
             handler: async function (response) {

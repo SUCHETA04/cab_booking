@@ -42,11 +42,14 @@ const Login = () => {
     };
 
     return (
-        <div className="flex justify-center items-center h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+        <div className="flex justify-center items-center h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative overflow-hidden">
             {/* Background design elements */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointing-events-none opacity-20">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500 blur-[120px]"></div>
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-500 blur-[120px]"></div>
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.08]">
+                    <img src="/logo.png" className="w-full h-full object-cover scale-150 blur-sm" />
+                </div>
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500 blur-[120px] opacity-20"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-500 blur-[120px] opacity-20"></div>
             </div>
 
             <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-10 z-10 mx-4">
@@ -115,7 +118,7 @@ const Login = () => {
                     )}
 
                     <div className="mt-6 text-center text-sm font-medium text-blue-200">
-                        <span>New to Aura? </span>
+                        <span>New to AURAA? </span>
                         <Link to="/register" className="text-white hover:text-blue-300 underline decoration-blue-400 decoration-2 underline-offset-4 transition-colors">Create an account</Link>
                     </div>
                 </form>

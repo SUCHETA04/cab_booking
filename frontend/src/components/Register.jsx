@@ -48,11 +48,14 @@ const Register = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 py-12">
+        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 py-12 relative overflow-hidden">
             {/* Background design elements */}
-            <div className="fixed top-0 left-0 w-full h-full overflow-hidden z-0 pointing-events-none opacity-20 hidden md:block">
-                <div className="absolute top-[10%] left-[10%] w-[30%] h-[30%] rounded-full bg-indigo-500 blur-[120px]"></div>
-                <div className="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] rounded-full bg-blue-500 blur-[120px]"></div>
+            <div className="fixed top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.08]">
+                    <img src="/logo.png" className="w-full h-full object-cover scale-150 blur-sm" />
+                </div>
+                <div className="absolute top-[10%] left-[10%] w-[30%] h-[30%] rounded-full bg-indigo-500 blur-[120px] opacity-20 hidden md:block"></div>
+                <div className="absolute bottom-[10%] right-[10%] w-[30%] h-[30%] rounded-full bg-blue-500 blur-[120px] opacity-20 hidden md:block"></div>
             </div>
 
             <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-10 z-10 mx-4">
