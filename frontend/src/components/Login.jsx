@@ -115,7 +115,7 @@ const Login = () => {
                     )}
 
                     <div className="mt-6 text-center text-sm font-medium text-blue-200">
-                        <span>New to Cab Booking? </span>
+                        <span>New to Aura? </span>
                         <Link to="/register" className="text-white hover:text-blue-300 underline decoration-blue-400 decoration-2 underline-offset-4 transition-colors">Create an account</Link>
                     </div>
                 </form>

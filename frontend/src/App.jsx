@@ -16,7 +16,7 @@ const Home = () => (
     </div>
 
     <div className="relative z-10 text-center px-4 max-w-4xl mx-auto backdrop-blur-sm bg-white/30 p-12 rounded-3xl border border-white/50 shadow-2xl">
-      <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-800 mb-6 drop-shadow-sm tracking-tight">Cab Booker Pro</h1>
+      <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-800 mb-6 drop-shadow-sm tracking-tight">Aura Rides</h1>
       <p className="text-xl md:text-2xl text-slate-700 mb-10 font-medium max-w-2xl mx-auto leading-relaxed">The most elegant, transparent, and seamless way to explore your city.</p>
       <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 justify-center items-center">
         <Link to="/register" className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-blue-700 hover:to-indigo-800 transition-all shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-1 active:scale-95">Get Started</Link>
@@ -45,12 +45,23 @@ const App = () => {
     <div>
       {/* Modern Navigation */}
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm w-full">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
-          <Link to={"/"} className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-inner">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-            </div>
-            <span className="text-gray-900 text-xl font-bold tracking-tight">Cab<span className="text-blue-600">Pro</span></span>
+        <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center h-16">
+          <Link to={"/"} className="flex items-center justify-center group" style={{ perspective: '1000px' }}>
+            <img
+              src="/logo.png"
+              alt="Aura Logo"
+              className="w-20 h-auto max-h-14 object-contain filter drop-shadow-xl transition-transform duration-500 ease-out group-hover:scale-110"
+              style={{ animation: 'float3d 8s ease-in-out infinite' }}
+            />
+            <style>{`
+              @keyframes float3d {
+                0% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+                25% { transform: translateY(-4px) rotateX(8deg) rotateY(4deg); }
+                50% { transform: translateY(0px) rotateX(0deg) rotateY(8deg); }
+                75% { transform: translateY(3px) rotateX(-6deg) rotateY(3deg); }
+                100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+              }
+            `}</style>
           </Link>
 
           <div className="flex items-center space-x-6">

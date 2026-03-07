@@ -81,7 +81,7 @@ const Checkout = () => {
             key: "rzp_test_SO4YpaYNVDXVK7",
             amount: fare * 100,
             currency: "INR",
-            name: "Cab Booking App",
+            name: "Aura Premium Rides",
             description: "Ride Fare Payment",
             order_id: orderId,
             handler: async function (response) {

@@ -211,21 +211,54 @@ const RiderDashboard = () => {
                             <span className="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
                             Live Tracking
                         </div>
-                        <div className="h-full w-full rounded-2xl overflow-hidden shadow-inner">
+                        <div className="h-full w-full rounded-2xl overflow-hidden shadow-inner flex flex-col">
                             {(() => {
-                                const activeRide = rides.find(r => r.status === 'ACCEPTED' || r.status === 'IN_PROGRESS') || rides[rides.length - 1]; // active or most recent ride
+                                const activeRide = rides.find(r => ['ACCEPTED', 'ARRIVED', 'IN_PROGRESS'].includes(r.status)) || rides[rides.length - 1]; // active or most recent ride
                                 const mapPickupLat = activeRide ? activeRide.pickupLat : 22.5839;
                                 const mapPickupLng = activeRide ? activeRide.pickupLng : 88.3433;
                                 const mapDropoffLat = activeRide ? activeRide.dropoffLat : 22.6046;
                                 const mapDropoffLng = activeRide ? activeRide.dropoffLng : 88.3831;
 
                                 return (
-                                    <RideMap
-                                        pickupLat={mapPickupLat} pickupLng={mapPickupLng}
-                                        dropoffLat={mapDropoffLat} dropoffLng={mapDropoffLng}
-                                        driverLat={driverLocation?.lat}
-                                        driverLng={driverLocation?.lng}
-                                    />
+                                    <>
+                                        <div className="flex-grow min-h-[300px]">
+                                            <RideMap
+                                                pickupLat={mapPickupLat} pickupLng={mapPickupLng}
+                                                dropoffLat={mapDropoffLat} dropoffLng={mapDropoffLng}
+                                                driverLat={driverLocation?.lat}
+                                                driverLng={driverLocation?.lng}
+                                            />
+                                        </div>
+                                        {activeRide && ['ACCEPTED', 'ARRIVED', 'IN_PROGRESS'].includes(activeRide.status) && activeRide.driver && (
+                                            <div className="bg-white border-t border-gray-100 p-5 rounded-b-2xl shadow-sm z-20">
+                                                <div className="flex justify-between items-center bg-blue-50/50 p-4 rounded-xl border border-blue-100/50">
+                                                    <div className="flex items-center space-x-4">
+                                                        <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xl uppercase shadow-inner">
+                                                            {activeRide.driver.username.charAt(0)}
+                                                        </div>
+                                                        <div>
+                                                            <h3 className="font-bold text-gray-900 text-lg leading-tight">{activeRide.driver.username}</h3>
+                                                            <div className="flex items-center text-sm font-medium text-gray-500 mt-0.5">
+                                                                <span className="flex items-center mr-3">
+                                                                    <svg className="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                                                                    {activeRide.driver.phone || 'Unavailable'}
+                                                                </span>
+                                                                <span className="bg-gray-200 px-2 py-0.5 rounded text-xs font-bold text-gray-700 uppercase tracking-wide">
+                                                                    {activeRide.driver.vehicleNumber}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {(activeRide.status === 'ACCEPTED' || activeRide.status === 'ARRIVED') && (
+                                                        <div className="text-center bg-white px-5 py-2.5 rounded-xl shadow-sm border border-gray-100">
+                                                            <p className="text-[10px] uppercase font-bold text-gray-500 tracking-wider mb-0.5">Share OTP to Start</p>
+                                                            <p className="text-2xl font-black text-indigo-600 tracking-widest">{activeRide.otp}</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </>
                                 );
                             })()}
                         </div>
@@ -284,8 +317,9 @@ const RiderDashboard = () => {
                                                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border
                                                     ${ride.status === 'COMPLETED' ? 'bg-green-50 text-green-700 border-green-200' :
                                                             ride.status === 'IN_PROGRESS' ? 'bg-blue-50 text-blue-700 border-blue-200' :
-                                                                ride.status === 'ACCEPTED' ? 'bg-purple-50 text-purple-700 border-purple-200' :
-                                                                    'bg-gray-50 text-gray-700 border-gray-200'}`}
+                                                                ride.status === 'ARRIVED' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' :
+                                                                    ride.status === 'ACCEPTED' ? 'bg-purple-50 text-purple-700 border-purple-200' :
+                                                                        'bg-gray-50 text-gray-700 border-gray-200'}`}
                                                     >
                                                         {ride.status === 'IN_PROGRESS' && <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-1.5 animate-pulse"></span>}
                                                         {ride.status}

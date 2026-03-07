@@ -12,7 +12,8 @@ import java.util.Set;
 @Table(name = "users",
        uniqueConstraints = {
            @UniqueConstraint(columnNames = "username"),
-           @UniqueConstraint(columnNames = "email")
+           @UniqueConstraint(columnNames = "email"),
+           @UniqueConstraint(columnNames = "phone")
        })
 public class User {
   @Id
@@ -31,6 +32,10 @@ public class User {
   @NotBlank
   @Size(max = 120)
   private String password;
+
+  @NotBlank
+  @Size(max = 15)
+  private String phone;
 
   private String drivingLicenseNumber;
   private String vehicleNumber;
@@ -81,6 +86,14 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
   }
 
   public Set<Role> getRoles() {

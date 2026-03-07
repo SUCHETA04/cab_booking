@@ -20,6 +20,10 @@ public class SignupRequest {
   @Size(min = 6, max = 40)
   private String password;
 
+  @NotBlank
+  @Size(min = 10, max = 15)
+  private String phone;
+
   private String drivingLicenseNumber;
   private String vehicleNumber;
   private String vehicleType;
@@ -54,6 +58,14 @@ public class SignupRequest {
 
   public void setRole(Set<String> role) {
     this.role = role;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
   }
 
   public String getDrivingLicenseNumber() {

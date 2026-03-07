@@ -63,9 +63,9 @@ public class DriverController {
     return ResponseEntity.ok(new MessageResponse("Ride accepted successfully!"));
   }
 
-  @PutMapping("/rides/{id}/start")
+  @PutMapping("/rides/{id}/arrive")
   @PreAuthorize("hasRole('DRIVER')")
-  public ResponseEntity<?> startRide(@PathVariable Long id, Authentication authentication) {
+  public ResponseEntity<?> arriveAtPickup(@PathVariable Long id, Authentication authentication) {
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
     
     Ride ride = rideRepository.findById(id).orElseThrow();
@@ -75,7 +75,32 @@ public class DriverController {
     }
 
     if (ride.getStatus() != ERideStatus.ACCEPTED) {
-       return ResponseEntity.badRequest().body(new MessageResponse("Error: Ride must be in ACCEPTED state."));
+       return ResponseEntity.badRequest().body(new MessageResponse("Error: Ride must be in ACCEPTED state to arrive."));
+    }
+
+    ride.setStatus(ERideStatus.ARRIVED);
+    rideRepository.save(ride);
+
+    return ResponseEntity.ok(new MessageResponse("Driver arrived at pickup location."));
+  }
+
+  @PutMapping("/rides/{id}/start")
+  @PreAuthorize("hasRole('DRIVER')")
+  public ResponseEntity<?> startRide(@PathVariable Long id, @RequestParam String otp, Authentication authentication) {
+    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    
+    Ride ride = rideRepository.findById(id).orElseThrow();
+    
+    if (ride.getDriver() == null || !ride.getDriver().getId().equals(userDetails.getId())) {
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: You are not assigned to this ride."));
+    }
+
+    if (ride.getStatus() != ERideStatus.ARRIVED) {
+       return ResponseEntity.badRequest().body(new MessageResponse("Error: Ride must be in ARRIVED state to start."));
+    }
+
+    if (!ride.getOtp().equals(otp)) {
+       return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid OTP."));
     }
 
     ride.setStatus(ERideStatus.IN_PROGRESS);

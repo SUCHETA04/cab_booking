@@ -6,6 +6,7 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [phone, setPhone] = useState('');
     const [role, setRole] = useState('rider');
     const [drivingLicenseNumber, setDrivingLicenseNumber] = useState('');
     const [vehicleNumber, setVehicleNumber] = useState('');
@@ -22,6 +23,7 @@ const Register = () => {
             username,
             email,
             password,
+            phone,
             role,
             role === 'driver' ? drivingLicenseNumber : null,
             role === 'driver' ? vehicleNumber : null,
@@ -91,6 +93,23 @@ const Register = () => {
                                         placeholder="Enter your email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-blue-100 text-sm font-semibold mb-2 ml-1">Phone Number</label>
+                                <div className="relative">
+                                    <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-blue-300">
+                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
+                                    </span>
+                                    <input
+                                        type="tel"
+                                        className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-blue-300/50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:bg-white/10 transition-all duration-300"
+                                        placeholder="Enter your phone number"
+                                        value={phone}
+                                        onChange={(e) => setPhone(e.target.value)}
                                         required
                                     />
                                 </div>

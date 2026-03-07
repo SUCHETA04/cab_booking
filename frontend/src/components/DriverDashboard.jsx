@@ -9,6 +9,7 @@ const DriverDashboard = () => {
     const [myRides, setMyRides] = useState([]);
     const [message, setMessage] = useState('');
     const [currentLocation, setCurrentLocation] = useState({ lat: 22.5839, lng: 88.3433 });
+    const [otps, setOtps] = useState({});
 
     const user = AuthService.getCurrentUser();
 
@@ -54,16 +55,26 @@ const DriverDashboard = () => {
         return () => clearInterval(interval);
     }, [myRides, currentLocation, user]);
 
-    const handleAction = (rideId, action) => {
+    const handleAction = (rideId, action, params = "") => {
         setMessage('');
-        axios.put(`http://localhost:8080/api/driver/rides/${rideId}/${action}`, {}, {
+        axios.put(`http://localhost:8080/api/driver/rides/${rideId}/${action}${params}`, {}, {
             headers: { Authorization: `Bearer ${user.accessToken}` }
         }).then(response => {
             setMessage(response.data.message);
             fetchRides(); // Refresh lists
         }).catch(error => {
-            setMessage("Error performing action.");
+            const errorMsg = error.response?.data?.message || "Error performing action.";
+            if (errorMsg.toLowerCase().includes("invalid otp") || errorMsg.toLowerCase().includes("wrong otp")) {
+                alert("❌ Wrong OTP! Please ask the rider for the correct 4-digit code.");
+                setMessage("Wrong OTP entered. Try again.");
+            } else {
+                setMessage(errorMsg);
+            }
         });
+    };
+
+    const handleOtpChange = (rideId, value) => {
+        setOtps(prev => ({ ...prev, [rideId]: value }));
     };
 
     if (!user || !user.roles.includes("ROLE_DRIVER")) {
@@ -193,8 +204,9 @@ const DriverDashboard = () => {
                                                 <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold border shadow-sm
                                                 ${ride.status === 'COMPLETED' ? 'bg-green-50 text-green-700 border-green-200' :
                                                         ride.status === 'IN_PROGRESS' ? 'bg-blue-50 text-blue-700 border-blue-200' :
-                                                            ride.status === 'ACCEPTED' ? 'bg-purple-50 text-purple-700 border-purple-200' :
-                                                                'bg-gray-50 text-gray-700 border-gray-200'}`}
+                                                            ride.status === 'ARRIVED' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' :
+                                                                ride.status === 'ACCEPTED' ? 'bg-purple-50 text-purple-700 border-purple-200' :
+                                                                    'bg-gray-50 text-gray-700 border-gray-200'}`}
                                                 >
                                                     {ride.status === 'IN_PROGRESS' && <span className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-1.5 animate-pulse"></span>}
                                                     {ride.status}
@@ -257,10 +269,33 @@ const DriverDashboard = () => {
 
                                             <div className="flex flex-col space-y-2 mt-auto">
                                                 {ride.status === 'ACCEPTED' && (
-                                                    <button onClick={() => handleAction(ride.id, 'start')} className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-500/30 flex items-center justify-center group-hover:bg-blue-700">
-                                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                                        Start Ride
+                                                    <button onClick={() => handleAction(ride.id, 'arrive')} className="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/30 flex items-center justify-center group-hover:bg-indigo-700">
+                                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                                        I've Arrived
                                                     </button>
+                                                )}
+                                                {ride.status === 'ARRIVED' && (
+                                                    <div className="bg-blue-50 border border-blue-100 p-3 rounded-xl flex flex-col space-y-3 shadow-inner">
+                                                        <div>
+                                                            <label className="text-[10px] uppercase font-bold text-gray-500 ml-1">Ask Rider for OTP</label>
+                                                            <input
+                                                                type="text"
+                                                                maxLength="4"
+                                                                placeholder="Enter 4-digit code"
+                                                                className="w-full mt-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-center font-mono text-xl tracking-widest text-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                                                                value={otps[ride.id] || ''}
+                                                                onChange={(e) => handleOtpChange(ride.id, e.target.value.replace(/\D/g, ''))}
+                                                            />
+                                                        </div>
+                                                        <button
+                                                            disabled={(otps[ride.id] || '').length !== 4}
+                                                            onClick={() => handleAction(ride.id, 'start', `?otp=${otps[ride.id]}`)}
+                                                            className="w-full bg-blue-600 text-white font-bold py-2.5 px-4 rounded-lg hover:bg-blue-700 transition shadow-md shadow-blue-500/20 flex items-center justify-center group-hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                                            Start Journey
+                                                        </button>
+                                                    </div>
                                                 )}
                                                 {ride.status === 'IN_PROGRESS' && (
                                                     <button onClick={() => handleAction(ride.id, 'complete')} className="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/30 flex items-center justify-center group-hover:bg-indigo-700 animate-pulse-slow">

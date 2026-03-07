@@ -44,6 +44,8 @@ public class Ride {
   private Boolean isPaid = false;
   private Boolean isPaymentFailed = false;
 
+  private String otp;
+
   public Ride() {
   }
 
@@ -61,6 +63,11 @@ public class Ride {
     this.requestedAt = LocalDateTime.now();
     this.isPaid = false;
     this.isPaymentFailed = false;
+
+    // Generate random 4 digit OTP
+    java.util.Random rnd = new java.util.Random();
+    int number = rnd.nextInt(9999);
+    this.otp = String.format("%04d", number);
   }
 
   public Long getId() {
@@ -197,5 +204,13 @@ public class Ride {
 
   public void setIsPaymentFailed(Boolean isPaymentFailed) {
     this.isPaymentFailed = isPaymentFailed;
+  }
+
+  public String getOtp() {
+    return otp;
+  }
+
+  public void setOtp(String otp) {
+    this.otp = otp;
   }
 }
