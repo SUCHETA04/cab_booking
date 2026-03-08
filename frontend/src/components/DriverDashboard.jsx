@@ -16,12 +16,13 @@ const DriverDashboard = () => {
     const fetchRides = () => {
         if (user) {
             const config = { headers: { Authorization: `Bearer ${user.accessToken}` } };
+            const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
-            axios.get('http://localhost:8080/api/driver/available-rides', config)
+            axios.get(`${apiUrl}/driver/available-rides`, config)
                 .then(res => setAvailableRides(res.data))
                 .catch(err => console.error("Error fetching available", err));
 
-            axios.get('http://localhost:8080/api/rides/my-rides', config)
+            axios.get(`${apiUrl}/rides/my-rides`, config)
                 .then(res => setMyRides(res.data))
                 .catch(err => console.error("Error fetching my rides", err));
         }
@@ -57,7 +58,8 @@ const DriverDashboard = () => {
 
     const handleAction = (rideId, action, params = "") => {
         setMessage('');
-        axios.put(`http://localhost:8080/api/driver/rides/${rideId}/${action}${params}`, {}, {
+        const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+        axios.put(`${apiUrl}/driver/rides/${rideId}/${action}${params}`, {}, {
             headers: { Authorization: `Bearer ${user.accessToken}` }
         }).then(response => {
             setMessage(response.data.message);

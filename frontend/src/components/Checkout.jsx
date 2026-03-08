@@ -19,7 +19,8 @@ const Checkout = () => {
     useEffect(() => {
         const user = AuthService.getCurrentUser();
         if (rideId && user) {
-            axios.post("http://localhost:8080/api/payment/create-order", { rideId }, {
+            const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+            axios.post(`${apiUrl}/payment/create-order`, { rideId }, {
                 headers: { Authorization: `Bearer ${user.accessToken}` }
             })
                 .then((res) => {
@@ -43,7 +44,8 @@ const Checkout = () => {
             if (!isExpired) {
                 setIsExpired(true);
                 const user = AuthService.getCurrentUser();
-                axios.post(`http://localhost:8080/api/payment/fail/${rideId}`, {}, {
+                const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+                axios.post(`${apiUrl}/payment/fail/${rideId}`, {}, {
                     headers: { Authorization: `Bearer ${user.accessToken}` }
                 }).catch(e => console.log(e));
             }
@@ -87,7 +89,8 @@ const Checkout = () => {
             handler: async function (response) {
                 try {
                     const user = AuthService.getCurrentUser();
-                    await axios.post(`http://localhost:8080/api/payment/confirm/${rideId}`, {}, {
+                    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+                    await axios.post(`${apiUrl}/payment/confirm/${rideId}`, {}, {
                         headers: { Authorization: `Bearer ${user.accessToken}` }
                     });
                     navigate("/rider");
@@ -115,7 +118,8 @@ const Checkout = () => {
             alert(response.error.description);
             setIsLoading(false);
             const user = AuthService.getCurrentUser();
-            await axios.post(`http://localhost:8080/api/payment/fail/${rideId}`, {}, {
+            const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+            await axios.post(`${apiUrl}/payment/fail/${rideId}`, {}, {
                 headers: { Authorization: `Bearer ${user.accessToken}` }
             }).catch(e => console.log(e));
         });
@@ -127,7 +131,8 @@ const Checkout = () => {
         setIsLoading(true);
         setTimeout(async () => {
             const user = AuthService.getCurrentUser();
-            await axios.post(`http://localhost:8080/api/payment/confirm/${rideId}`, {}, {
+            const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+            await axios.post(`${apiUrl}/payment/confirm/${rideId}`, {}, {
                 headers: { Authorization: `Bearer ${user.accessToken}` }
             }).catch(e => console.log(e));
 

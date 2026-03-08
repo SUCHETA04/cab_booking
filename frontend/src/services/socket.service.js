@@ -11,7 +11,8 @@ class SocketService {
         if (this.client && this.client.connected) return; // already connected
 
         // Setup SockJS and Stomp
-        const socket = new SockJS('http://localhost:8080/ws');
+        const socketUrl = import.meta.env.VITE_WS_URL || 'http://localhost:8080/ws';
+        const socket = new SockJS(socketUrl);
 
         this.client = new Client({
             webSocketFactory: () => socket,

@@ -22,7 +22,8 @@ const RiderDashboard = () => {
     useEffect(() => {
         // Fetch user's previous rides
         if (user) {
-            axios.get('http://localhost:8080/api/rides/my-rides', {
+            const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+            axios.get(`${apiUrl}/rides/my-rides`, {
                 headers: { Authorization: `Bearer ${user.accessToken}` }
             }).then(response => {
                 setRides(response.data);
@@ -102,7 +103,8 @@ const RiderDashboard = () => {
         };
 
         try {
-            const response = await axios.post('http://localhost:8080/api/rides/request', ridePayload, {
+            const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+            const response = await axios.post(`${apiUrl}/rides/request`, ridePayload, {
                 headers: { Authorization: `Bearer ${user.accessToken}` }
             });
             setMessage(`Ride requested successfully! Estimated Fare: ₹${response.data.fare}`);
